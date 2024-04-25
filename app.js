@@ -1,6 +1,5 @@
-const http = require('http');
-const mongoose = require("mongoose");
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
@@ -35,6 +34,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+ 
   roll: {
     type: String,
     required: true,
@@ -44,6 +44,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+ 
 });
 
 // Create the User model
@@ -51,7 +52,9 @@ const User = mongoose.model("User", UserSchema);
 
 // Establish MongoDB connection
 mongoose
-  .connect("mongodb+srv://username:password@cluster0.f2zvgdz.mongodb.net/")
+  .connect(
+    "mongodb+srv://umesh:atharva@cluster0.f2zvgdz.mongodb.net/"
+  )
   .then(() => {
     console.log("Connected to MongoDB successfully!");
   })
@@ -91,9 +94,10 @@ app.post("/login", async (req, res) => {
 app.post("/signup", async (req, res) => {
   try {
     // Extract required fields from request body
-    const { name, roll, email, phoneNumber, password, semester } = req.body;
+    const { name, roll, email, phoneNumber, password, semester, batch } =
+      req.body;
 
-    // Check if phoneNumber is provided
+    // // Check if phoneNumber is provided
     if (!phoneNumber) {
       return res.status(400).json({ error: "Phone number is required" });
     }
@@ -105,7 +109,7 @@ app.post("/signup", async (req, res) => {
       email,
       phoneNumber,
       semester,
-      password,
+      password
     });
 
     // Save the new user to the database
@@ -131,8 +135,7 @@ app.post("/signup", async (req, res) => {
     }
   }
 });
-
-// Route to retrieve user by roll number
+//name
 app.get("/user/:roll", async (req, res) => {
   try {
     const user = await User.findOne({ roll: req.params.roll });
@@ -146,11 +149,8 @@ app.get("/user/:roll", async (req, res) => {
   }
 });
 
-// Create HTTP server
-const server = http.createServer(app);
-
 // Start the server
-const PORT = process.env.PORT || 80;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
